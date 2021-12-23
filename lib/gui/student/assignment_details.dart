@@ -205,67 +205,28 @@ class DetailsView extends StatelessWidget {
                                                   recognizer:
                                                       TapGestureRecognizer()
                                                         ..onTap = () async {
-                                                          // try {
-                                                          //   // Saved with this method.
-                                                          //   var imageId = await ImageDownloader
-                                                          //       .downloadImage(
-                                                          //           _imagesStudent[
-                                                          //               index]);
-                                                          //   if (imageId ==
-                                                          //       null) {
-                                                          //     return;
-                                                          //   }
-                                                          //   // Below is a method of obtaining saved image information.
-                                                          //   var fileName =
-                                                          //       await ImageDownloader
-                                                          //           .findName(
-                                                          //               imageId);
-                                                          //   var path =
-                                                          //       await ImageDownloader
-                                                          //           .findPath(
-                                                          //               imageId);
-                                                          //   var size =
-                                                          //       await ImageDownloader
-                                                          //           .findByteSize(
-                                                          //               imageId);
-                                                          //   var mimeType =
-                                                          //       await ImageDownloader
-                                                          //           .findMimeType(
-                                                          //               imageId);
-                                                          //   Navigator.pop(
-                                                          //       context);
-                                                          // } on PlatformException catch (error) {
-                                                          //   print(error);
-                                                          // }
                                                           try {
                                                             var imageId = await ImageDownloader
                                                                 .downloadImage(
                                                                     _imagesStudent[
                                                                         index]);
-                                                            Fluttertoast
-                                                                .showToast(
-                                                              msg:
-                                                                  'Image Saved',
-                                                              toastLength: Toast
-                                                                  .LENGTH_SHORT,
-                                                              gravity:
-                                                                  ToastGravity
-                                                                      .BOTTOM,
-                                                              timeInSecForIosWeb:
-                                                                  1,
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              textColor:
-                                                                  Colors.black,
-                                                            );
-                                                            if (imageId ==
-                                                                null) {
-                                                              return;
-                                                            }
-                                                            var path =
-                                                                await ImageDownloader
-                                                                    .findPath(
-                                                                        imageId);
+                                                            // Fluttertoast
+                                                            //     .showToast(
+                                                            //   msg:
+                                                            //       'Image Saved',
+                                                            //   toastLength: Toast
+                                                            //       .LENGTH_SHORT,
+                                                            //   gravity:
+                                                            //       ToastGravity
+                                                            //           .BOTTOM,
+                                                            //   timeInSecForIosWeb:
+                                                            //       1,
+                                                            //   backgroundColor:
+                                                            //       Colors.white,
+                                                            //   textColor:
+                                                            //       Colors.black,
+                                                            // );
+
                                                           } on PlatformException catch (error) {
                                                             print(error);
                                                           }

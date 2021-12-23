@@ -71,10 +71,9 @@ class _CheckerList extends State<CheckerList> {
                 width: 80.0,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50.0),
-                    color: Colors.green,
+                    color: Colors.white,
                     image: DecorationImage(
-                        image: NetworkImage(
-                            'https://pixel.nymag.com/imgs/daily/vulture/2017/06/14/14-tom-cruise.w700.h700.jpg'))),
+                        image: AssetImage('assets/images/edcheckLogo.png'))),
               ),
             ]),
             SizedBox(height: 10.0),
