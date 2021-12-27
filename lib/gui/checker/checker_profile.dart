@@ -280,114 +280,114 @@ class ProfileState extends State<CheckerProfile> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black, width: 0),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: ExpansionTile(
-                      title: Text(
-                        'Bank Details',
-                        style: TextStyle(fontSize: 16, fontFamily: 'Trueno'),
-                      ),
-                      subtitle: Text('See your bank account details'),
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: TextFormField(
-                            readOnly: false,
-                            autofocus: false,
-                            controller: accountNameControler,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFE6E6E6),
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              labelText: 'Account Name',
-                              prefixIcon: Icon(Icons.chrome_reader_mode),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: TextFormField(
-                            readOnly: false,
-                            autofocus: false,
-                            controller: accountNumberControler,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFE6E6E6),
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              labelText: 'Account Number',
-                              prefixIcon: Icon(Icons.format_list_numbered),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: TextFormField(
-                            readOnly: false,
-                            autofocus: false,
-                            controller: bankNameControler,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFE6E6E6),
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              labelText: 'Bank Name',
-                              prefixIcon: Icon(Icons.home_work_sharp),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: TextFormField(
-                            readOnly: false,
-                            autofocus: false,
-                            controller: routingNumberControler,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFE6E6E6),
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              labelText: 'Routing Number',
-                              prefixIcon: Icon(Icons.confirmation_number_sharp),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            ElevatedButton(
-                              child: const Text('Update Bank Details'),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.black,
-                              ),
-                              onPressed: () {/* ... */},
-                            ),
-                            const SizedBox(width: 15),
-                          ],
-                        ),
-                        SizedBox(height: 9)
-                      ],
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(5.0),
+                //   child: Card(
+                //     shape: RoundedRectangleBorder(
+                //       side: BorderSide(color: Colors.black, width: 0),
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //     child: ExpansionTile(
+                //       title: Text(
+                //         'Bank Details',
+                //         style: TextStyle(fontSize: 16, fontFamily: 'Trueno'),
+                //       ),
+                //       subtitle: Text('See your bank account details'),
+                //       children: <Widget>[
+                //         Padding(
+                //           padding: EdgeInsets.all(10),
+                //           child: TextFormField(
+                //             readOnly: false,
+                //             autofocus: false,
+                //             controller: accountNameControler,
+                //             decoration: InputDecoration(
+                //               border: OutlineInputBorder(
+                //                 borderSide: BorderSide(
+                //                   color: Color(0xFFE6E6E6),
+                //                   width: 2,
+                //                 ),
+                //                 borderRadius: BorderRadius.circular(6),
+                //               ),
+                //               labelText: 'Account Name',
+                //               prefixIcon: Icon(Icons.chrome_reader_mode),
+                //             ),
+                //           ),
+                //         ),
+                //         Padding(
+                //           padding: EdgeInsets.all(10),
+                //           child: TextFormField(
+                //             readOnly: false,
+                //             autofocus: false,
+                //             controller: accountNumberControler,
+                //             decoration: InputDecoration(
+                //               border: OutlineInputBorder(
+                //                 borderSide: BorderSide(
+                //                   color: Color(0xFFE6E6E6),
+                //                   width: 2,
+                //                 ),
+                //                 borderRadius: BorderRadius.circular(6),
+                //               ),
+                //               labelText: 'Account Number',
+                //               prefixIcon: Icon(Icons.format_list_numbered),
+                //             ),
+                //           ),
+                //         ),
+                //         Padding(
+                //           padding: EdgeInsets.all(10),
+                //           child: TextFormField(
+                //             readOnly: false,
+                //             autofocus: false,
+                //             controller: bankNameControler,
+                //             decoration: InputDecoration(
+                //               border: OutlineInputBorder(
+                //                 borderSide: BorderSide(
+                //                   color: Color(0xFFE6E6E6),
+                //                   width: 2,
+                //                 ),
+                //                 borderRadius: BorderRadius.circular(6),
+                //               ),
+                //               labelText: 'Bank Name',
+                //               prefixIcon: Icon(Icons.home_work_sharp),
+                //             ),
+                //           ),
+                //         ),
+                //         Padding(
+                //           padding: EdgeInsets.all(10),
+                //           child: TextFormField(
+                //             readOnly: false,
+                //             autofocus: false,
+                //             controller: routingNumberControler,
+                //             decoration: InputDecoration(
+                //               border: OutlineInputBorder(
+                //                 borderSide: BorderSide(
+                //                   color: Color(0xFFE6E6E6),
+                //                   width: 2,
+                //                 ),
+                //                 borderRadius: BorderRadius.circular(6),
+                //               ),
+                //               labelText: 'Routing Number',
+                //               prefixIcon: Icon(Icons.confirmation_number_sharp),
+                //             ),
+                //           ),
+                //         ),
+                //         Row(
+                //           mainAxisAlignment: MainAxisAlignment.end,
+                //           children: <Widget>[
+                //             ElevatedButton(
+                //               child: const Text('Update Bank Details'),
+                //               style: ElevatedButton.styleFrom(
+                //                 primary: Colors.black,
+                //               ),
+                //               onPressed: () {/* ... */},
+                //             ),
+                //             const SizedBox(width: 15),
+                //           ],
+                //         ),
+                //         SizedBox(height: 9)
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Card(

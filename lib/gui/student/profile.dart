@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors, file_names, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatefulWidget  {
+class Profile extends StatefulWidget {
   final Function(String) callback;
   Profile(this.callback);
 
@@ -10,7 +11,7 @@ class Profile extends StatefulWidget  {
   State<Profile> createState() => ProfileState();
 }
 
-class ProfileState extends State<Profile>  {
+class ProfileState extends State<Profile> {
   bool rememberMe = false;
   final nameControler = TextEditingController();
   final mobileNumberControler = TextEditingController();
@@ -18,7 +19,11 @@ class ProfileState extends State<Profile>  {
 
   void onUpdatePress() {}
 
-  void onLogoutPress() {
+  Future<void> onLogoutPress() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.clear();
+    print("SharedPreferences Cleared");
     widget.callback("homepage");
   }
 
@@ -60,7 +65,6 @@ class ProfileState extends State<Profile>  {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
-
                       controller: nameControler,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -71,23 +75,23 @@ class ProfileState extends State<Profile>  {
                             borderRadius: BorderRadius.circular(6),
                           ),
                           labelText: 'Full Name',
-                          prefixIcon: Icon(Icons.assignment_ind)
-                        ),
+                          prefixIcon: Icon(Icons.assignment_ind)),
                     )),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
                     controller: mobileNumberControler,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFE6E6E6),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFFE6E6E6),
+                          width: 2,
                         ),
-                        labelText: 'Phone Number',
-                      prefixIcon: Icon(Icons.phone_iphone),),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      labelText: 'Phone Number',
+                      prefixIcon: Icon(Icons.phone_iphone),
+                    ),
                   ),
                 ),
                 Padding(
@@ -97,7 +101,7 @@ class ProfileState extends State<Profile>  {
                     readOnly: true,
                     autofocus: false,
                     decoration: InputDecoration(
-                      border:  OutlineInputBorder(
+                      border: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFFE6E6E6),
                           width: 2,
@@ -114,29 +118,29 @@ class ProfileState extends State<Profile>  {
                   child: TextField(
                     controller: schoolControler,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFE6E6E6),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFFE6E6E6),
+                          width: 2,
                         ),
-                        labelText: 'School',
-                      prefixIcon: Icon(Icons.school_rounded),),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      labelText: 'School',
+                      prefixIcon: Icon(Icons.school_rounded),
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    child: Text('Update'),
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(400.0, 60),
-                      primary: Colors.green,
-                      textStyle:
-                      const TextStyle(fontSize: 20, fontFamily: 'Trueno'),
-                    ),
-                    onPressed:  onUpdatePress
-                  ),
+                      child: Text('Update'),
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(400.0, 60),
+                        primary: Colors.green,
+                        textStyle:
+                            const TextStyle(fontSize: 20, fontFamily: 'Trueno'),
+                      ),
+                      onPressed: onUpdatePress),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -146,10 +150,9 @@ class ProfileState extends State<Profile>  {
                         fixedSize: const Size(400.0, 60),
                         primary: Colors.black,
                         textStyle:
-                        const TextStyle(fontSize: 20, fontFamily: 'Trueno'),
+                            const TextStyle(fontSize: 20, fontFamily: 'Trueno'),
                       ),
-                      onPressed:  onLogoutPress
-                  ),
+                      onPressed: onLogoutPress),
                 ),
                 // Padding(
                 //   padding: const EdgeInsets.all(8.0),

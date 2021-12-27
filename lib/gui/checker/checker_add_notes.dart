@@ -281,7 +281,7 @@ class _CheckerAddNotesState extends State<CheckerAddNotes> {
     setState(() {
       statusSelected = value;
       if (statusSelected == "2") {
-        isVisibleReviewNotes = true;
+        isVisibleReviewNotes = false;
       } else {
         isVisibleReviewNotes = false;
       }

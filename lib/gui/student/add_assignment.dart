@@ -138,7 +138,7 @@ class _AddAssignmentState extends State<AddAssignment> {
                                 children: [
                                   Align(
                                     child: Text(
-                                      "Edit Assignment",
+                                      "Add Assignment",
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Trueno',

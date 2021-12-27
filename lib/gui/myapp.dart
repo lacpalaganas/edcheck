@@ -15,6 +15,8 @@ import 'package:edcheck/gui/student/unchecked.dart';
 import 'package:edcheck/internal/assignment_data.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:loading_animations/loading_animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'homepage/login_form.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +40,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
   var _NavItems;
   late TabController _controller;
 
-  void initState() {
+  initState() {
     super.initState();
 
     _controller = TabController(vsync: this, length: 4);
@@ -55,11 +57,42 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
     _NavItemsChecker.insert(1, CheckerInReview());
     _NavItemsChecker.insert(2, CheckerCheckedAssignments());
     _NavItemsChecker.insert(3, CheckerProfile(onChangePage));
+
     _NavItems = _NavItemsHome;
     tabs = homeTab;
   }
 
-  void nothingToDo(String test) {}
+  Widget future() {
+    return FutureBuilder(
+        future:
+            checkRemembered(), // the function to get your data from firebase or firestore
+        builder: (BuildContext context, AsyncSnapshot snap) {
+          if (snap.data == null) {
+            //return loading widget
+            return Center(
+                child: LoadingBouncingGrid.square(
+              backgroundColor: Colors.green,
+            ));
+          } else {
+            //return the widget that you want to display after loading
+            return tabbar();
+          }
+        });
+  }
+
+  Future<bool> checkRemembered() async {
+    var prefs = await SharedPreferences.getInstance();
+    bool? remembered = prefs.getBool("loggedIn");
+    if (remembered == true) {
+      setState(() {
+        _NavItems = _NavItemsStudent;
+        tabs = studentTab;
+      });
+
+      print("Student is already in");
+    }
+    return true;
+  }
 
   void onChangePage(String page) async {
     setState(() {
@@ -225,6 +258,10 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
   var tabs = <Widget>[];
   var nav = <Widget>[];
 
+  Widget tabbar() {
+    return TabBarView(controller: _controller, children: _NavItems);
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -263,10 +300,7 @@ class MyAppState extends State<MyApp> with TickerProviderStateMixin {
               tabs: tabs,
             ),
           ),
-          body: TabBarView(
-            controller: _controller,
-            children: _NavItems,
-          ),
+          body: future(),
         ),
       ),
     );

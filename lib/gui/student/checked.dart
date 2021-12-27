@@ -36,10 +36,11 @@ class _CheckedAssignmentsState extends State<CheckedAssignments> {
   }
 
   Future requestData() async {
+    final prefs = await SharedPreferences.getInstance();
     Response response =
         await post(Uri.parse("https://edcheck.app/api/test.php"), body: {
       "key": "0328fjkasdocaksdut209029350293jrlMFLSAJDFPAOUW09IRW",
-      "testVariable": "1",
+      "id": '43',
     });
     var data = jsonDecode(response.body);
     assignJsonData(data);

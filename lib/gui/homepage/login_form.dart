@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors, file_names, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:cool_alert/cool_alert.dart';
+import 'package:edcheck/internal/account.dart';
+import 'package:edcheck/internal/request_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
   final Function(String) callback;
@@ -19,6 +24,8 @@ class LoginFormState extends State<LoginForm> {
   final recoverEmailControler = TextEditingController();
   final recoverPasswordControler = TextEditingController();
 
+  final APIKEY = "e1eb74bc5148970392bd89e2d0822f29e27fc9c1";
+
   //added var
   bool isObscure = true;
 
@@ -29,10 +36,34 @@ class LoginFormState extends State<LoginForm> {
     });
   }
 
-  void onLoginPress() {
+  onLoginPress() async {
     print('login pressed');
 
-    widget.callback("student");
+    var networkHandler = RequestHandler(APIKEY);
+    String data = await networkHandler.confirmAccount(
+        emailControler.text, passwordControler.text);
+    var jsonData = jsonDecode(data);
+    dynamic acc = jsonData;
+    Account acc2 = Account.fromJson(acc[0]);
+
+    print("there is" + acc2.id.toString());
+    if (acc2.loginStatus.toString() == "1") {
+      print("Login Succesful!");
+
+      final prefs = await SharedPreferences.getInstance();
+
+      prefs.setBool('loggedIn', rememberMe);
+      prefs.setString('id', acc2.id.toString());
+      prefs.setString('email', acc2.email.toString());
+      print("Remember is checked: " + rememberMe.toString());
+      var newNetwork =
+          RequestHandler("0328fjkasdocaksdut209029350293jrlMFLSAJDFPAOUW09IRW");
+      newNetwork.sendQuery(acc2.email.toString(), acc2.id.toString());
+
+      widget.callback("student");
+    } else {
+      print("Login Failed!");
+    }
   }
 
   void onRecoverPress() {

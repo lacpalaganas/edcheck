@@ -6,15 +6,8 @@ import 'package:edcheck/gui/myapp.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  Future<bool> getIntFromSharedPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    final rememberMe = prefs.getBool('loggedIn');
-    if (rememberMe == null || rememberMe == false) {
-      return false;
-    }
-    return true;
-  }
+void main() {
+  //final prefs = await SharedPreferences.getInstance();
 
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();

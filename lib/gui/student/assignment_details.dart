@@ -102,23 +102,36 @@ class DetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String status = assignmentData.status.toString();
+    Color statusColor = Colors.white;
+    String statusText = "";
+    if (status == '1') {
+      statusText = "Open";
+      statusColor = Colors.blue;
+    } else if (status == '2') {
+      statusText = "In Review";
+      statusColor = Colors.orange;
+    } else if (status == '3') {
+      statusText = "Completed";
+      statusColor = Colors.green;
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const ListTile(
+            ListTile(
                 trailing: Chip(
               label: Text(
-                'status here',
+                statusText,
                 style: TextStyle(
                   fontFamily: 'Trueno',
                   color: Colors.white,
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: statusColor,
             )),
             ListTile(
               title: Text(
