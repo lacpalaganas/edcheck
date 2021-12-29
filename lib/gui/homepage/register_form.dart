@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:edcheck/internal/request_handler.dart';
 import 'package:edcheck/internal/school.dart';
 
 import 'package:edcheck/gui/homepage/register_form_checker.dart';
@@ -21,9 +22,49 @@ class RegisterFormState extends State<RegisterForm> {
   TextEditingController emailControler = TextEditingController();
   TextEditingController passwordControler = TextEditingController();
   TextEditingController schoolControler = TextEditingController();
+  //added var
+  bool isObscure = true;
 
-  void onRegisterPress() {
-    setState(() {});
+  final _formKey = GlobalKey<FormState>();
+
+  final String _APIKEY = "e1eb74bc5148970392bd89e2d0822f29e27fc9c12";
+  String userType = "1";
+
+  void onRegisterPress() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {});
+      print("Name inputted: " + nameControler.text);
+      print("Mobile inputted: " + phoneNumberControler.text);
+      print("Email inputted: " + emailControler.text);
+      print("Pass inputted: " + passwordControler.text);
+      print("School inputted: " + schoolControler.text);
+
+      String name = nameControler.text.trim();
+      String mobile = phoneNumberControler.text.trim();
+      String school = schoolControler.text.trim();
+      String password = passwordControler.text.trim();
+      String status = "1";
+      String freeAssignment = "1000";
+      String gradeLevel = "1";
+      String userType = "1";
+
+      var email = emailControler.text.trim();
+
+      RequestHandler request = RequestHandler(_APIKEY);
+
+      if (await request.registerAccount(email, password, mobile, status,
+              freeAssignment, userType, gradeLevel) ==
+          "true") {
+        ScaffoldMessenger.of(context).showSnackBar(
+            new SnackBar(content: new Text('Registration successful')));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            new SnackBar(content: new Text('Registration failed')));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(new SnackBar(content: new Text('Invalid Input')));
+    }
   }
 
   void onLegalPress() {
@@ -181,24 +222,39 @@ class RegisterFormState extends State<RegisterForm> {
                       )),
                   Padding(
                       padding: EdgeInsets.all(10),
-                      child: TextField(
-                        controller: emailControler,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xFFE6E6E6),
-                              width: 2,
+                      child: Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          validator: (value) {
+                            String pattern =
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+                            RegExp regex = RegExp(pattern);
+                            if (value == null ||
+                                value.isEmpty ||
+                                !regex.hasMatch(value)) {
+                              return 'Enter a valid email address';
+                            }
+                            return null;
+                          },
+                          controller: emailControler,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xFFE6E6E6),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            borderRadius: BorderRadius.circular(6),
+                            labelText: 'Email Address',
+                            prefixIcon: Icon(Icons.email),
                           ),
-                          labelText: 'Email Address',
-                          prefixIcon: Icon(Icons.email),
                         ),
                       )),
                   Padding(
                       padding: EdgeInsets.all(10),
                       child: TextField(
                         controller: passwordControler,
+                        obscureText: isObscure,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -209,6 +265,16 @@ class RegisterFormState extends State<RegisterForm> {
                           ),
                           labelText: 'Password',
                           prefixIcon: Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(isObscure
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                isObscure = !isObscure;
+                              });
+                            },
+                          ),
                         ),
                       )),
                   Padding(

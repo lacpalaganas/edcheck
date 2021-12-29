@@ -18,6 +18,9 @@ class _RegisterFormCheckerState extends State<RegisterFormChecker> {
   final passwordControler = TextEditingController();
   final confirmPasswordControler = TextEditingController();
 
+  //added var
+  bool isObscure = true;
+
   void onRegisterPress() {
     setState(() {});
   }
@@ -116,21 +119,33 @@ class _RegisterFormCheckerState extends State<RegisterFormChecker> {
                             ),
                           )),
                       Padding(
-                          padding: EdgeInsets.all(10),
-                          child: TextField(
-                            controller: passwordControler,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFE6E6E6),
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              labelText: 'Password',
-                              prefixIcon: Icon(Icons.lock),
+                        padding: EdgeInsets.all(10),
+                        child: TextField(
+                          controller: passwordControler,
+                          obscureText: isObscure,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(isObscure
+                                  ? Icons.visibility_off
+                                  : Icons.visibility),
+                              onPressed: () {
+                                setState(() {
+                                  isObscure = !isObscure;
+                                });
+                              },
                             ),
-                          )),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xFFE6E6E6),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            labelText: 'Password',
+                            prefixIcon: Icon(Icons.lock),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextField(

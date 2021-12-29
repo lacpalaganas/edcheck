@@ -14,6 +14,11 @@ class CheckedAssignments extends StatefulWidget {
   _CheckedAssignmentsState createState() => _CheckedAssignmentsState();
 }
 
+class InvalidFormatException {
+  String message;
+  InvalidFormatException(this.message);
+}
+
 class _CheckedAssignmentsState extends State<CheckedAssignments> {
   //List<String> title = [];
   // List<String> subject = [];
@@ -37,23 +42,30 @@ class _CheckedAssignmentsState extends State<CheckedAssignments> {
 
   Future requestData() async {
     final prefs = await SharedPreferences.getInstance();
-    Response response =
-        await post(Uri.parse("https://edcheck.app/api/test.php"), body: {
-      "key": "0328fjkasdocaksdut209029350293jrlMFLSAJDFPAOUW09IRW",
-      "id": '43',
-    });
-    var data = jsonDecode(response.body);
-    assignJsonData(data);
-
-    print(imagePaths[0].name.toString());
-    print(assignmentData[0].title.toString());
-
-    if (mounted) {
-      setState(() {
-        this.items = assignmentData.length;
+    try {
+      Response response =
+          await post(Uri.parse("https://edcheck.app/api/test.php"), body: {
+        "key": "0328fjkasdocaksdut209029350293jrlMFLSAJDFPAOUW09IRW",
+        "id": prefs.getString("id"),
       });
+
+      var data = jsonDecode(response.body);
+
+      assignJsonData(data);
+
+      print(imagePaths[0].name.toString());
+      print(assignmentData[0].title.toString());
+
+      if (mounted) {
+        setState(() {
+          this.items = assignmentData.length;
+        });
+      }
+      return assignmentData;
+    } on FormatException {
+      print(" student pref id: " + prefs.getString("id").toString());
+      throw InvalidFormatException('Invalid Data Format');
     }
-    return assignmentData;
   }
 
   void assignJsonData(var data) {
@@ -89,6 +101,11 @@ class _CheckedAssignmentsState extends State<CheckedAssignments> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return listViewbuilder(context);
+          }
+          if (snapshot.hasError) {
+            final error = snapshot.error;
+            return Center(
+                child: Text("Error encountered: " + error.toString()));
           }
           return Center(
               child: LoadingBouncingGrid.square(

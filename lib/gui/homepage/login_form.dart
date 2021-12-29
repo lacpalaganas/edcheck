@@ -42,27 +42,34 @@ class LoginFormState extends State<LoginForm> {
     var networkHandler = RequestHandler(APIKEY);
     String data = await networkHandler.confirmAccount(
         emailControler.text, passwordControler.text);
-    var jsonData = jsonDecode(data);
-    dynamic acc = jsonData;
-    Account acc2 = Account.fromJson(acc[0]);
+    if (data != "0") {
+      var jsonData = jsonDecode(data);
+      dynamic acc = jsonData;
+      Account acc2 = Account.fromJson(acc[0]);
 
-    print("there is" + acc2.id.toString());
-    if (acc2.loginStatus.toString() == "1") {
-      print("Login Succesful!");
+      print("there is" + acc2.id.toString());
+      if (acc2.loginStatus.toString() == "1") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(new SnackBar(content: new Text('Login successful')));
 
-      final prefs = await SharedPreferences.getInstance();
+        final prefs = await SharedPreferences.getInstance();
 
-      prefs.setBool('loggedIn', rememberMe);
-      prefs.setString('id', acc2.id.toString());
-      prefs.setString('email', acc2.email.toString());
-      print("Remember is checked: " + rememberMe.toString());
-      var newNetwork =
-          RequestHandler("0328fjkasdocaksdut209029350293jrlMFLSAJDFPAOUW09IRW");
-      newNetwork.sendQuery(acc2.email.toString(), acc2.id.toString());
+        prefs.setBool('loggedIn', rememberMe);
+        prefs.setString('id', acc2.id.toString());
+        prefs.setString('email', acc2.email.toString());
+        print("Remember is checked: " + rememberMe.toString());
+        var newNetwork = RequestHandler(
+            "0328fjkasdocaksdut209029350293jrlMFLSAJDFPAOUW09IRW");
+        newNetwork.sendQuery(acc2.email.toString(), acc2.id.toString());
 
-      widget.callback("student");
+        widget.callback("student");
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(new SnackBar(content: new Text('Login Failed!')));
+      }
     } else {
-      print("Login Failed!");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(new SnackBar(content: new Text('Login Failed!')));
     }
   }
 

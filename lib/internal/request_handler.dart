@@ -34,4 +34,30 @@ class RequestHandler {
     print("Response from query: " + response.body);
     return response.body;
   }
+
+  Future<String> registerAccount(
+      String email,
+      String password,
+      String mobile,
+      String status,
+      String freeAssignment,
+      String userType,
+      String gradeLevel) async {
+    String id = "124";
+    Response response =
+        await post(Uri.parse("https://edcheck.app/api/test.php"), body: {
+      "key": _APIKEY,
+      "id": id,
+      "email": email,
+      "password": password,
+      "status": status,
+      "freeAssignments": freeAssignment,
+      "userType": userType,
+      "gradeLevel": gradeLevel
+    });
+
+    print("Response from query register: " + response.body);
+
+    return response.body.toString();
+  }
 }
