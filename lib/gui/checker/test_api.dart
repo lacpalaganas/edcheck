@@ -46,12 +46,12 @@ class _TestAPIState extends State<TestAPI> {
     // timer = Timer.periodic(Duration(seconds: 50), (Timer t) => postData());
     // tz.initializeTimeZones();
 
-    getDataWithKey();
+    // getDataWithKey();
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    // timer?.cancel();
 
     super.dispose();
   }
@@ -81,58 +81,11 @@ class _TestAPIState extends State<TestAPI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Test API"),
-      ),
-      // body: Center(
-      //   child: RefreshIndicator(
-      //     onRefresh: getData(),
-      //     child: ListView(children: [
-      //       SizedBox(
-      //         height: 50,
-      //       ),
-      //       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      //         // GestureDetector(
-      //         //   onTap: () {
-      //         //     NotificationService().showNotification(1, "title", "body", 1);
-      //         //   },
-      //         //   child: Container(
-      //         //     height: 40,
-      //         //     width: 200,
-      //         //     color: Colors.green,
-      //         //     child: Center(
-      //         //       child: Text("Show Notification"),
-      //         //     ),
-      //         //   ),
-      //         // ),
-      //         Text(
-      //           'Name: $name',
-      //           style: TextStyle(
-      //               color: Colors.black,
-      //               fontFamily: 'Trueno',
-      //               fontWeight: FontWeight.bold,
-      //               fontSize: 16.0),
-      //         ),
-      //         Text(
-      //           'Attribute: $attributes',
-      //           style: TextStyle(
-      //               color: Colors.black,
-      //               fontFamily: 'Trueno',
-      //               fontWeight: FontWeight.bold,
-      //               fontSize: 16.0),
-      //         ),
-      //         Text(
-      //           'Random Variable: $randomVariable',
-      //           style: TextStyle(
-      //               color: Colors.black,
-      //               fontFamily: 'Trueno',
-      //               fontWeight: FontWeight.bold,
-      //               fontSize: 16.0),
-      //         ),
-      //       ]),
-      //     ]),
-      //   ),
-      // ),
-    );
+        appBar: AppBar(
+          title: Text("Test API"),
+        ),
+        body: Center(
+          child: Text("test"),
+        ));
   }
 }

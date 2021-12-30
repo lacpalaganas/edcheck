@@ -27,6 +27,8 @@ class _CheckedAssignmentsState extends State<CheckedAssignments> {
   List<ImagePaths> imagePaths = [];
   List<ImagePaths> samePaths = [];
   var combinedData = [];
+  String _id = "";
+  String _email = "";
 
   late int items = 0;
 
@@ -34,10 +36,18 @@ class _CheckedAssignmentsState extends State<CheckedAssignments> {
 
   void initState() {
     super.initState();
-
+    initalizeAccount();
     print("checked class");
     //futureStudents = requestData();
     futureAssignmentData = requestData();
+  }
+
+  void initalizeAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    _id = prefs.getString("id")!;
+    _email = prefs.getString("email")!;
+    print("[checked] Account: " + _id + " " + _email);
   }
 
   Future requestData() async {
@@ -127,7 +137,7 @@ class _CheckedAssignmentsState extends State<CheckedAssignments> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddAssignment(),
+                builder: (context) => AddAssignment(id: _id, email: _email),
               ));
         },
       ),

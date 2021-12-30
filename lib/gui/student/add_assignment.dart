@@ -1,26 +1,138 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:edcheck/internal/assignment_id.dart';
+import 'package:edcheck/internal/request_handler.dart';
+import 'package:edcheck/internal/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker2/multi_image_picker2.dart';
 
 class AddAssignment extends StatefulWidget {
-  const AddAssignment({Key? key}) : super(key: key);
+  final String id;
+  final String email;
+  const AddAssignment({Key? key, required this.id, required this.email})
+      : super(key: key);
 
   @override
-  _AddAssignmentState createState() => _AddAssignmentState();
+  _AddAssignmentState createState() => _AddAssignmentState(id, email);
 }
 
 class _AddAssignmentState extends State<AddAssignment> {
+  final String userid;
+  final String email;
+  _AddAssignmentState(this.userid, this.email);
+
   final titleController = TextEditingController();
   final subjectController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  String chapterSelected = "1";
+
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(
+          child: Text(
+              "Chapter 1: Linear Equations, Inequalities and Applications"),
+          value: "1"),
+      DropdownMenuItem(
+          child: Text("Chapter 2: Linear Equations, Graphs, and Functions"),
+          value: "2"),
+      DropdownMenuItem(
+          child: Text("Chapter 3: Systems of Linear Equations"), value: "3"),
+      DropdownMenuItem(
+          child: Text(
+              "Chapter 4: Exponents, Polynomials, and Polynomial Functions"),
+          value: "4"),
+      DropdownMenuItem(child: Text("Chapter 5: Factoring"), value: "5"),
+      DropdownMenuItem(
+          child: Text("Chapter 6: Rational Expressions and Functions"),
+          value: "6"),
+      DropdownMenuItem(
+          child: Text("Chapter 7: Roots, Radicals, and Root Functions"),
+          value: "7"),
+    ];
+    return menuItems;
+  }
+
   List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
+
+  Future<void> onSavePress() async {
+    RequestHandler handler =
+        RequestHandler("e1eb74bc5148970392bd89e2d0822f29e27fc9c17");
+
+    var chapters = chapterSelected;
+    var title = titleController.text;
+    var subject = subjectController.text;
+    var description = descriptionController.text;
+    var id = "";
+    var studentSchool = "";
+    var gradeLevel = "";
+    var assignNumber = "";
+    var status = "1";
+    var checkerNotes = "";
+    var checkerUserId = "";
+    var created_at = DateTime.now().millisecondsSinceEpoch;
+    var updated_at = DateTime.now().millisecondsSinceEpoch;
+
+    var data =
+        await handler.getAssignId("e1eb74bc5148970392bd89e2d0822f29e27fc9c15");
+    var jsonData = jsonDecode(data);
+    List<AssignmentId> assignmentIds = [];
+    for (Map accs in jsonData) {
+      int iterate = 0;
+      assignmentIds.insert(iterate, AssignmentId.fromJson(accs));
+      //print("id: " + accounts[iterate].id);
+      iterate++;
+    }
+    print("last assignNum from DB = " + assignmentIds[0].assignNumber);
+    int lastAssignNum = int.parse(assignmentIds[0].assignNumber.toString());
+    int nextAssignNum = lastAssignNum + 1;
+    print("Next assignNum = " + nextAssignNum.toString());
+
+    print("last uniqueId from DB = " + assignmentIds[0].id);
+    int lastUniqueId = int.parse(assignmentIds[0].id.toString());
+    int nextUniqueId = lastUniqueId + 1;
+    print("Next uniqueId = " + nextUniqueId.toString());
+
+    handler.newAssignment(
+        nextUniqueId.toString(),
+        title,
+        chapters,
+        studentSchool,
+        gradeLevel,
+        subject,
+        description,
+        userid,
+        nextAssignNum.toString(),
+        status,
+        checkerNotes,
+        checkerUserId,
+        created_at.toString(),
+        updated_at.toString());
+
+    print("-----------------");
+    print("id: " + nextUniqueId.toString());
+    print("title: " + title);
+    print("chapters: " + chapters.toString());
+    print("studentSchool: " + studentSchool);
+    print("gradeLevel: " + gradeLevel);
+    print("subject: " + subject);
+    print("userId: " + userid);
+    print("assignNumber: " + nextAssignNum.toString());
+    print("status: " + status.toString());
+    print("checkerNotes: " + checkerNotes);
+    print("checkerUserId: " + checkerUserId.toString());
+    print("created_at: " + created_at.toString());
+    print("updated_at: " + updated_at.toString());
+  }
+
+  void onUploadPress() {}
 
   Widget buildGridView() {
     return SizedBox(
@@ -111,12 +223,7 @@ class _AddAssignmentState extends State<AddAssignment> {
           backgroundColor: Colors.green,
           title: Text('Add Assignment View'),
           actions: <Widget>[
-            IconButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Add assignment clicked')));
-                },
-                icon: Icon(Icons.save))
+            IconButton(onPressed: onSavePress, icon: Icon(Icons.save))
           ],
         ),
         body: Stack(children: <Widget>[
@@ -171,19 +278,69 @@ class _AddAssignmentState extends State<AddAssignment> {
                                       )),
                                   Padding(
                                     padding: EdgeInsets.all(10),
-                                    child: TextField(
-                                      controller: subjectController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFFE6E6E6),
-                                            width: 2,
+                                    child: TypeAheadFormField(
+                                        direction: AxisDirection.up,
+                                        textFieldConfiguration:
+                                            TextFieldConfiguration(
+                                          controller: subjectController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color(0xFFE6E6E6),
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            labelText: 'Subjects',
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(6),
                                         ),
-                                        labelText: 'Subject',
-                                      ),
+                                        suggestionsCallback: (pattern) {
+                                          return Subjects.getSuggestions(
+                                              pattern);
+                                        },
+                                        noItemsFoundBuilder: (context) =>
+                                            Container(
+                                              height: 50,
+                                              child: Center(
+                                                child: Text(
+                                                  'No subjects found.',
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                              ),
+                                            ),
+                                        onSuggestionSelected: (suggestion) {
+                                          this.subjectController.text =
+                                              suggestion.toString();
+                                        },
+                                        itemBuilder: (context, suggestion) {
+                                          return ListTile(
+                                            title: Text(suggestion.toString()),
+                                          );
+                                        }),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: DropdownButtonFormField(
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xFFE6E6E6),
+                                              width: 2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                          labelText: 'Chapters'),
+                                      isExpanded: true,
+                                      value: chapterSelected,
+                                      items: dropdownItems,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          chapterSelected = newValue!;
+                                        });
+                                      },
                                     ),
                                   ),
                                   Padding(
@@ -227,8 +384,4 @@ class _AddAssignmentState extends State<AddAssignment> {
           )
         ]));
   }
-
-  void onSavePress() {}
-
-  void onUploadPress() {}
 }

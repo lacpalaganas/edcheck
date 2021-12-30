@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:edcheck/internal/account.dart';
+import 'package:edcheck/internal/request_handler.dart';
 import 'package:edcheck/terms/policy.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +25,61 @@ class _RegisterFormCheckerState extends State<RegisterFormChecker> {
   //added var
   bool isObscure = true;
 
-  void onRegisterPress() {
-    setState(() {});
+  final _formKey = GlobalKey<FormState>();
+
+  final String _APIKEY = "e1eb74bc5148970392bd89e2d0822f29e27fc9c12";
+
+  String userType = "2";
+
+  void onRegisterPress() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {});
+
+      String name = nameControler.text.trim();
+      String mobile = phoneNumberControler.text.trim();
+      String password = passwordControler.text.trim();
+
+      String status = "0";
+      String freeAssignment = "0";
+      String gradeLevel = "0";
+      String userType = "2";
+
+      var email = emailControler.text.trim();
+
+      print("Name inputted: " + nameControler.text);
+      print("Mobile inputted: " + phoneNumberControler.text);
+      print("Email inputted: " + emailControler.text);
+      print("Pass inputted: " + password);
+
+      RequestHandler request = RequestHandler(_APIKEY);
+      var data = await request
+          .getServerIds("e1eb74bc5148970392bd89e2d0822f29e27fc9c14");
+
+      var jsonData = jsonDecode(data);
+      List<Account> accounts = [];
+      for (Map accs in jsonData) {
+        int iterate = 0;
+        accounts.insert(iterate, Account.fromJson(accs));
+        //print("id: " + accounts[iterate].id);
+        iterate++;
+      }
+      print("last digit = " + accounts[0].id);
+      int lastId = int.parse(accounts[0].id.toString());
+      int nextId = lastId + 1;
+
+      if (await request.registerAccount(nextId.toString(), email, password,
+              mobile, status, freeAssignment, userType, gradeLevel) ==
+          "true") {
+        ScaffoldMessenger.of(context).showSnackBar(
+            new SnackBar(content: new Text('Registration successful')));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            new SnackBar(content: new Text('Registration successful')));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(new SnackBar(content: new Text('Invalid Input')));
+    }
   }
 
   @override
@@ -30,7 +87,7 @@ class _RegisterFormCheckerState extends State<RegisterFormChecker> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text('Checker Registration'),
+          title: Text('Checker Registration Page'),
           foregroundColor: Colors.black,
         ),
         body: Padding(
@@ -104,18 +161,32 @@ class _RegisterFormCheckerState extends State<RegisterFormChecker> {
                           )),
                       Padding(
                           padding: EdgeInsets.all(10),
-                          child: TextField(
-                            controller: emailControler,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFE6E6E6),
-                                  width: 2,
+                          child: Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              validator: (value) {
+                                String pattern =
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+                                RegExp regex = RegExp(pattern);
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    !regex.hasMatch(value)) {
+                                  return 'Enter a valid email address';
+                                }
+                                return null;
+                              },
+                              controller: emailControler,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFE6E6E6),
+                                    width: 2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
-                                borderRadius: BorderRadius.circular(6),
+                                labelText: 'Email Address',
+                                prefixIcon: Icon(Icons.email),
                               ),
-                              labelText: 'Email Address',
-                              prefixIcon: Icon(Icons.email),
                             ),
                           )),
                       Padding(
@@ -146,23 +217,23 @@ class _RegisterFormCheckerState extends State<RegisterFormChecker> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: TextField(
-                          controller: confirmPasswordControler,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xFFE6E6E6),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            labelText: 'Confirm Password',
-                            prefixIcon: Icon(Icons.lock),
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.all(10),
+                      //   child: TextField(
+                      //     controller: confirmPasswordControler,
+                      //     decoration: InputDecoration(
+                      //       border: OutlineInputBorder(
+                      //         borderSide: BorderSide(
+                      //           color: Color(0xFFE6E6E6),
+                      //           width: 2,
+                      //         ),
+                      //         borderRadius: BorderRadius.circular(6),
+                      //       ),
+                      //       labelText: 'Confirm Password',
+                      //       prefixIcon: Icon(Icons.lock),
+                      //     ),
+                      //   ),
+                      // ),
                       Row(
                         children: <Widget>[
                           Checkbox(

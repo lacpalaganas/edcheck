@@ -26,6 +26,9 @@ class _UncheckedAssignmentsState extends State<UncheckedAssignments> {
   List<ImagePaths> imagePaths = [];
   List<ImagePaths> samePaths = [];
 
+  String _id = "";
+  String _email = "";
+
   late int items = 0;
 
   late Future<dynamic> futureAssignmentData;
@@ -34,8 +37,17 @@ class _UncheckedAssignmentsState extends State<UncheckedAssignments> {
     super.initState();
 
     print("checked class");
+    initalizeAccount();
 
     futureAssignmentData = requestData();
+  }
+
+  void initalizeAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    _id = prefs.getString("id")!;
+    _email = prefs.getString("email")!;
+    print("[unchecked] Account: " + _id + " " + _email);
   }
 
   Future requestData() async {
@@ -113,7 +125,7 @@ class _UncheckedAssignmentsState extends State<UncheckedAssignments> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddAssignment(),
+                builder: (context) => AddAssignment(id: _id, email: _email),
               ));
         },
       ),

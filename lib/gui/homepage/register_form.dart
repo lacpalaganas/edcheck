@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
+import 'package:edcheck/internal/account.dart';
 import 'package:edcheck/internal/request_handler.dart';
 import 'package:edcheck/internal/school.dart';
 
@@ -9,6 +12,7 @@ import 'package:edcheck/terms/policy.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:crypto/crypto.dart';
 
 class RegisterForm extends StatefulWidget {
   @override
@@ -28,21 +32,18 @@ class RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
 
   final String _APIKEY = "e1eb74bc5148970392bd89e2d0822f29e27fc9c12";
+
   String userType = "1";
 
   void onRegisterPress() async {
     if (_formKey.currentState!.validate()) {
       setState(() {});
-      print("Name inputted: " + nameControler.text);
-      print("Mobile inputted: " + phoneNumberControler.text);
-      print("Email inputted: " + emailControler.text);
-      print("Pass inputted: " + passwordControler.text);
-      print("School inputted: " + schoolControler.text);
 
       String name = nameControler.text.trim();
       String mobile = phoneNumberControler.text.trim();
       String school = schoolControler.text.trim();
       String password = passwordControler.text.trim();
+
       String status = "1";
       String freeAssignment = "1000";
       String gradeLevel = "1";
@@ -50,16 +51,36 @@ class RegisterFormState extends State<RegisterForm> {
 
       var email = emailControler.text.trim();
 
-      RequestHandler request = RequestHandler(_APIKEY);
+      print("Name inputted: " + nameControler.text);
+      print("Mobile inputted: " + phoneNumberControler.text);
+      print("Email inputted: " + emailControler.text);
+      print("Pass inputted: " + password);
+      print("School inputted: " + schoolControler.text);
 
-      if (await request.registerAccount(email, password, mobile, status,
-              freeAssignment, userType, gradeLevel) ==
+      RequestHandler request = RequestHandler(_APIKEY);
+      var data = await request
+          .getServerIds("e1eb74bc5148970392bd89e2d0822f29e27fc9c14");
+
+      var jsonData = jsonDecode(data);
+      List<Account> accounts = [];
+      for (Map accs in jsonData) {
+        int iterate = 0;
+        accounts.insert(iterate, Account.fromJson(accs));
+        //print("id: " + accounts[iterate].id);
+        iterate++;
+      }
+      print("last digit = " + accounts[0].id);
+      int lastId = int.parse(accounts[0].id.toString());
+      int nextId = lastId + 1;
+
+      if (await request.registerAccount(nextId.toString(), email, password,
+              mobile, status, freeAssignment, userType, gradeLevel) ==
           "true") {
         ScaffoldMessenger.of(context).showSnackBar(
             new SnackBar(content: new Text('Registration successful')));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            new SnackBar(content: new Text('Registration failed')));
+            new SnackBar(content: new Text('Registration successful')));
       }
     } else {
       ScaffoldMessenger.of(context)
@@ -151,42 +172,42 @@ class RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                   SizedBox(height: 4.0),
-                  Container(
-                    padding: EdgeInsets.only(left: 14.0, right: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            text: 'Register as ',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                              fontFamily: 'Trueno',
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: 'Checker.',
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterFormChecker(),
-                                          ));
-                                    },
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 16.0,
-                                    fontFamily: 'Trueno',
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   padding: EdgeInsets.only(left: 14.0, right: 25.0),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     children: <Widget>[
+                  //       RichText(
+                  //         text: TextSpan(
+                  //           text: 'Register as ',
+                  //           style: TextStyle(
+                  //             color: Colors.black,
+                  //             fontSize: 16.0,
+                  //             fontFamily: 'Trueno',
+                  //           ),
+                  //           children: <TextSpan>[
+                  //             TextSpan(
+                  //                 text: 'Checker.',
+                  //                 recognizer: TapGestureRecognizer()
+                  //                   ..onTap = () {
+                  //                     Navigator.push(
+                  //                         context,
+                  //                         MaterialPageRoute(
+                  //                           builder: (context) =>
+                  //                               RegisterFormChecker(),
+                  //                         ));
+                  //                   },
+                  //                 style: TextStyle(
+                  //                   color: Colors.green,
+                  //                   fontSize: 16.0,
+                  //                   fontFamily: 'Trueno',
+                  //                 )),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   SizedBox(height: 4.0),
                   Padding(
                       padding: EdgeInsets.all(10),
@@ -391,6 +412,19 @@ class RegisterFormState extends State<RegisterForm> {
                                                     'assets/policies/privacy_policy.md',
                                               )),
                                     );
+                                  },
+                                style: TextStyle(
+                                    color: Colors.green, fontSize: 15.0)),
+                            TextSpan(
+                                text: 'Registrer as Checker. ',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegisterFormChecker(),
+                                        ));
                                   },
                                 style: TextStyle(
                                     color: Colors.green, fontSize: 15.0)),

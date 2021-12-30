@@ -51,6 +51,7 @@ dependencies:
   flutter_typeahead: ^3.2.4
   image_downloader: ^0.31.0
   fluttertoast: ^8.0.8
+  crypto: ^3.0.1
   
   
 
